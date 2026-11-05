@@ -1,0 +1,23 @@
+# ---- Secrets: NEVER commit ----
+.env
+.env.*
+!.env.example
+
+# ---- Python (mbeyen) ----
+mbeyen/mshop/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.db
+*.sqlite3
+
+# ---- Node (mbefoe) ----
+node_modules/
+dist/
+*.local
+npm-debug.log*
+
+# ---- Editors / OS ----
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,28 @@
+# Render Blueprint: the FastAPI backend (mbeyen).
+# Render → New → Blueprint → pick this repo. You'll be asked for the values
+# marked `sync: false` (they are secrets and are never stored in Git).
+services:
+  - type: web
+    name: bukuma-api
+    runtime: python
+    rootDir: mbeyen
+    plan: free
+    region: frankfurt # closest Render region to Sierra Leone / Supabase eu-west
+    buildCommand: pip install -r requirements.txt
+    # Apply any new database migrations, then start the API
+    startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips="*"
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.9
+      - key: ENVIRONMENT
+        value: production
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "720"
+      - key: DATABASE_URL # your Supabase connection string
+        sync: false
+      - key: SECRET_KEY # long random string — Render generates one
+        generateValue: true
+      - key: CORS_ORIGINS # your Netlify address, e.g. https://bukuma.netlify.app
+        sync: false
