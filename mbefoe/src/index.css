@@ -1,0 +1,100 @@
+@import 'tailwindcss';
+
+/*
+ * Bu'kuma design tokens (Tailwind v4 — configured in CSS, no tailwind.config needed).
+ * Each token becomes a utility: e.g. --color-brand-600 -> bg-brand-600, text-brand-600.
+ */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  /*
+   * Leopard-inspired palette — kept restrained:
+   *   brand = golden ochre (the coat)  -> buttons, active nav, highlights
+   *   ink   = deep espresso (the spots) -> sidebar, headings, strong text
+   *   neutrals = Tailwind's warm "stone" scale for surfaces and borders
+   */
+  --color-brand-50: oklch(0.985 0.012 80);
+  --color-brand-100: oklch(0.96 0.03 80);
+  --color-brand-200: oklch(0.92 0.06 78);
+  --color-brand-300: oklch(0.86 0.1 75);
+  --color-brand-400: oklch(0.79 0.13 70);
+  --color-brand-500: oklch(0.72 0.14 65);
+  --color-brand-600: oklch(0.63 0.13 60);
+  --color-brand-700: oklch(0.53 0.11 55);
+  --color-brand-800: oklch(0.44 0.09 52);
+  --color-brand-900: oklch(0.37 0.07 50);
+  --color-brand-950: oklch(0.26 0.05 48);
+
+  --color-ink-50: oklch(0.97 0.006 60);
+  --color-ink-100: oklch(0.93 0.01 60);
+  --color-ink-200: oklch(0.86 0.015 58);
+  --color-ink-300: oklch(0.75 0.02 56);
+  --color-ink-400: oklch(0.62 0.025 54);
+  --color-ink-500: oklch(0.5 0.028 52);
+  --color-ink-600: oklch(0.42 0.028 50);
+  --color-ink-700: oklch(0.35 0.026 50);
+  --color-ink-800: oklch(0.29 0.022 50);
+  --color-ink-900: oklch(0.23 0.018 50);
+  --color-ink-950: oklch(0.17 0.014 50);
+
+  /* Semantic status colours for stock levels, payments, profit/loss */
+  --color-success: var(--color-emerald-600);
+  --color-warning: var(--color-orange-500);
+  --color-danger: var(--color-red-600);
+  --color-info: var(--color-sky-600);
+}
+
+@layer base {
+  html {
+    @apply bg-stone-50 text-ink-800 antialiased;
+  }
+
+  body {
+    @apply min-h-svh font-sans;
+  }
+
+  /* Tailwind v4 resets buttons to cursor: default — restore pointer */
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+
+  /* Money and quantities line up nicely in tables */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/*
+ * Leopard coat: ochre base with soft rosettes (broken rings) and small spots,
+ * drawn with layered radial gradients — no images. Kept low-contrast so text
+ * on top stays readable.
+ */
+@utility leopard {
+  background-color: var(--color-brand-500);
+  background-image:
+    radial-gradient(circle at 22% 30%, transparent 0 7px, rgb(43 32 27 / 0.28) 7px 11px, transparent 11.5px),
+    radial-gradient(circle at 70% 62%, transparent 0 6px, rgb(43 32 27 / 0.24) 6px 9.5px, transparent 10px),
+    radial-gradient(circle at 48% 88%, rgb(43 32 27 / 0.22) 0 3px, transparent 3.5px),
+    radial-gradient(circle at 88% 18%, rgb(43 32 27 / 0.2) 0 2.5px, transparent 3px),
+    radial-gradient(circle at 8% 78%, rgb(43 32 27 / 0.18) 0 2px, transparent 2.5px),
+    linear-gradient(135deg, var(--color-brand-400), var(--color-brand-600));
+  background-size: 88px 88px, 104px 104px, 76px 76px, 64px 64px, 58px 58px, 100% 100%;
+}
+
+/* Darker variant: espresso with faint ochre rosettes (for strong surfaces) */
+@utility leopard-dark {
+  background-color: var(--color-ink-900);
+  background-image:
+    radial-gradient(circle at 22% 30%, transparent 0 7px, rgb(224 144 54 / 0.16) 7px 11px, transparent 11.5px),
+    radial-gradient(circle at 70% 62%, transparent 0 6px, rgb(224 144 54 / 0.13) 6px 9.5px, transparent 10px),
+    radial-gradient(circle at 48% 88%, rgb(224 144 54 / 0.12) 0 3px, transparent 3.5px),
+    radial-gradient(circle at 88% 18%, rgb(224 144 54 / 0.1) 0 2.5px, transparent 3px);
+  background-size: 88px 88px, 104px 104px, 76px 76px, 64px 64px;
+}
+
+/* Room for the mobile bottom navigation (incl. iPhone home indicator) */
+@utility pb-bottom-nav {
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+}
