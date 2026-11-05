@@ -1,0 +1,26 @@
+# Web framework
+fastapi==0.162.0
+uvicorn[standard]==0.54.0
+python-multipart==0.0.33
+
+# Database
+SQLAlchemy==2.1.8
+psycopg[binary]==3.3.8
+alembic==1.20.1
+
+# Settings & validation
+pydantic==2.14.3
+pydantic-settings==2.16.2
+email-validator==2.3.0
+
+# Auth
+PyJWT==2.15.1
+pwdlib[argon2]==0.3.1
+
+# Testing
+pytest==9.2.0
+httpx==0.28.1
+
+# Reports
+reportlab==5.1.0
+openpyxl==3.1.5
