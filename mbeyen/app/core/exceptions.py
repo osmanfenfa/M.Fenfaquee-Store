@@ -14,6 +14,8 @@ from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError, OperationalError
 
+from app.database.tenancy import TenantViolation
+
 log = logging.getLogger("bukuma.errors")
 
 
@@ -55,6 +57,12 @@ def register_exception_handlers(app: FastAPI) -> None:
         # Expected, user-fixable problems: log briefly, return the message as-is
         log.info("%s -> %s %s: %s", _where(request), exc.status_code, type(exc).__name__, exc.message)
         return JSONResponse(status_code=exc.status_code, content={"detail": exc.message})
+
+    @app.exception_handler(TenantViolation)
+    async def _handle_tenant_violation(request: Request, exc: TenantViolation) -> JSONResponse:
+        # Never reveal that another shop's record exists
+        log.warning("%s -> 404 cross-shop access blocked: %s", _where(request), exc)
+        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"detail": "Not found"})
 
     @app.exception_handler(IntegrityError)
     async def _handle_integrity(request: Request, exc: IntegrityError) -> JSONResponse:

@@ -2,6 +2,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.schemas.shop import ShopBrief
+
 
 class Token(BaseModel):
     access_token: str
@@ -17,6 +19,9 @@ class UserRead(BaseModel):
     full_name: str
     is_active: bool
     created_at: datetime
+    role: str
+    is_superadmin: bool
+    shop: ShopBrief | None
 
 
 class UserUpdate(BaseModel):

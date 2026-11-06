@@ -2,9 +2,10 @@ from sqlalchemy import CheckConstraint, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base, Money, Quantity
+from app.database.tenancy import TenantMixin
 
 
-class PurchaseItem(Base):
+class PurchaseItem(TenantMixin, Base):
     __tablename__ = "purchase_items"
     __table_args__ = (
         CheckConstraint("quantity > 0", name="quantity_positive"),

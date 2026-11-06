@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from app.api.v1.endpoints import (
+    admin,
     auth,
     categories,
     dashboard,
@@ -26,6 +27,7 @@ api_router.include_router(purchases.router)
 api_router.include_router(expenses.router)
 api_router.include_router(settings.router)
 api_router.include_router(reports.router)
+api_router.include_router(admin.router)
 
 # All modules registered.
 # (payments are handled under /sales/{id}/payments and /purchases/{id}/payments)

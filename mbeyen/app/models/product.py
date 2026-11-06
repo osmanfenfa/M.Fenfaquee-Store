@@ -1,12 +1,13 @@
 from decimal import Decimal
 
-from sqlalchemy import Boolean, CheckConstraint, ForeignKey, String, Text
+from sqlalchemy import Boolean, CheckConstraint, ForeignKey, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base, Money, Quantity, TimestampMixin
+from app.database.tenancy import TenantMixin
 
 
-class Product(TimestampMixin, Base):
+class Product(TenantMixin, TimestampMixin, Base):
     """
     A product sold in a single unit (piece, bag, carton, litre...).
 
@@ -17,6 +18,7 @@ class Product(TimestampMixin, Base):
 
     __tablename__ = "products"
     __table_args__ = (
+        UniqueConstraint("shop_id", "sku", name="uq_products_shop_sku"),
         CheckConstraint("cost_price >= 0", name="cost_price_non_negative"),
         CheckConstraint("selling_price >= 0", name="selling_price_non_negative"),
         CheckConstraint("stock_quantity >= 0", name="stock_non_negative"),
@@ -25,7 +27,7 @@ class Product(TimestampMixin, Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(150), index=True)
-    sku: Mapped[str | None] = mapped_column(String(50), unique=True)
+    sku: Mapped[str | None] = mapped_column(String(50))
     description: Mapped[str | None] = mapped_column(Text)
     category_id: Mapped[int | None] = mapped_column(
         ForeignKey("categories.id", ondelete="SET NULL"), index=True

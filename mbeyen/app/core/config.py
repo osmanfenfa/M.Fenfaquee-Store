@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     CURRENCY: str = "NLe"
     ENVIRONMENT: str = "development"
     API_V1_PREFIX: str = "/api/v1"
+    # Anyone can create a shop from the sign-up page; set to false to close sign-ups
+    ALLOW_SIGNUP: bool = True
 
     DATABASE_URL: str
     SECRET_KEY: str

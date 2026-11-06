@@ -7,7 +7,9 @@ import AppLayout from '@/components/layout/AppLayout'
 import Categories from '@/pages/Categories'
 import Expenses from '@/pages/Expenses'
 import Inventory from '@/pages/Inventory'
+import Admin from '@/pages/Admin'
 import Login from '@/pages/Login'
+import Signup from '@/pages/Signup'
 import NewPurchase from '@/pages/NewPurchase'
 import NewSale from '@/pages/NewSale'
 import NotFound from '@/pages/NotFound'
@@ -31,6 +33,7 @@ export const router = createBrowserRouter([
     errorElement: <RouteError fullPage />,
     children: [
       { path: '/login', element: <Login /> },
+      { path: '/signup', element: <Signup /> },
       {
         element: <ProtectedRoute />,
         children: [
@@ -67,6 +70,7 @@ export const router = createBrowserRouter([
                   { path: 'suppliers', element: <Suppliers /> },
                   { path: 'reports', element: <Reports /> },
                   { path: 'settings', element: <Settings /> },
+                  { path: 'admin', element: <Admin /> },
                   { path: '*', element: <NotFound /> },
                 ],
               },

@@ -5,6 +5,7 @@ import {
   Package,
   Receipt,
   Settings,
+  ShieldCheck,
   ShoppingCart,
   Tags,
   Truck,
@@ -54,5 +55,15 @@ export const NAV_GROUPS: NavGroup[] = [
   },
 ]
 
-export const ALL_NAV_ITEMS = NAV_GROUPS.flatMap((g) => g.items)
+export const ADMIN_GROUP: NavGroup = {
+  label: 'Platform',
+  items: [{ to: '/admin', label: 'All shops', icon: ShieldCheck }],
+}
+
+/** Menu for this user: shop pages (if they have a shop) + platform admin (if admin). */
+export function navGroupsFor(user: { shop: unknown; is_superadmin: boolean } | null): NavGroup[] {
+  return [...(user?.shop ? NAV_GROUPS : []), ...(user?.is_superadmin ? [ADMIN_GROUP] : [])]
+}
+
+export const ALL_NAV_ITEMS = [...NAV_GROUPS, ADMIN_GROUP].flatMap((g) => g.items)
 

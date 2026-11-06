@@ -2,7 +2,7 @@ import { createContext, useCallback, useEffect, useMemo, useState, type ReactNod
 import { useQueryClient } from '@tanstack/react-query'
 import { setUnauthorizedHandler, tokenStore } from '@/services/api'
 import { authService } from '@/services/authService'
-import type { LoginCredentials, User } from '@/types/auth'
+import type { LoginCredentials, SignupData, User } from '@/types/auth'
 
 type AuthStatus = 'loading' | 'authenticated' | 'anonymous'
 
@@ -10,6 +10,7 @@ export interface AuthContextValue {
   user: User | null
   status: AuthStatus
   login: (credentials: LoginCredentials) => Promise<void>
+  signup: (data: SignupData) => Promise<void>
   logout: () => void
 }
 
@@ -53,19 +54,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [logout])
 
-  const login = useCallback(async (credentials: LoginCredentials) => {
-    const { access_token } = await authService.login(credentials)
-    tokenStore.set(access_token)
-    try {
-      const u = await authService.me()
-      setUser(u)
-      setStatus('authenticated')
-    } catch (e) {
-      tokenStore.clear()
-      throw e
-    }
-  }, [])
+  /** Store the token, load the user, and start with an empty cache (never show a previous shop's data). */
+  const startSession = useCallback(
+    async (accessToken: string) => {
+      tokenStore.set(accessToken)
+      queryClient.clear()
+      try {
+        const u = await authService.me()
+        setUser(u)
+        setStatus('authenticated')
+      } catch (e) {
+        tokenStore.clear()
+        throw e
+      }
+    },
+    [queryClient],
+  )
 
-  const value = useMemo(() => ({ user, status, login, logout }), [user, status, login, logout])
+  const login = useCallback(
+    async (credentials: LoginCredentials) => startSession((await authService.login(credentials)).access_token),
+    [startSession],
+  )
+
+  const signup = useCallback(
+    async (data: SignupData) => startSession((await authService.signup(data)).access_token),
+    [startSession],
+  )
+
+  const value = useMemo(() => ({ user, status, login, signup, logout }), [user, status, login, signup, logout])
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

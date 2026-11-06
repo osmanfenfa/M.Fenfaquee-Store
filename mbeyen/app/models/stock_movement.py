@@ -5,6 +5,7 @@ from sqlalchemy import DateTime, ForeignKey, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base, Money, Quantity, str_enum
+from app.database.tenancy import TenantMixin
 
 
 class MovementType(StrEnum):
@@ -16,7 +17,7 @@ class MovementType(StrEnum):
     ADJUSTMENT = "adjustment"  # manual correction (count, damage, expiry...)
 
 
-class StockMovement(Base):
+class StockMovement(TenantMixin, Base):
     """
     Immutable ledger of every stock change. Never updated or deleted —
     mistakes are corrected with a new movement.

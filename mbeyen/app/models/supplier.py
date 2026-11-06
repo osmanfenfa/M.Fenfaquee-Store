@@ -2,9 +2,10 @@ from sqlalchemy import Boolean, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base, TimestampMixin
+from app.database.tenancy import TenantMixin
 
 
-class Supplier(TimestampMixin, Base):
+class Supplier(TenantMixin, TimestampMixin, Base):
     __tablename__ = "suppliers"
 
     id: Mapped[int] = mapped_column(primary_key=True)

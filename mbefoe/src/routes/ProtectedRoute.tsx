@@ -9,12 +9,14 @@ export function FullPageSpinner() {
   )
 }
 
-/** Only lets the signed-in owner through; otherwise sends them to /login. */
+/** Only lets signed-in users through; otherwise sends them to /login. */
 export default function ProtectedRoute() {
-  const { status } = useAuth()
+  const { status, user } = useAuth()
   const location = useLocation()
 
   if (status === 'loading') return <FullPageSpinner />
   if (status === 'anonymous') return <Navigate to="/login" replace state={{ from: location.pathname }} />
+  // A platform admin without a shop has no shop pages — send them to the admin area
+  if (user && !user.shop && location.pathname !== '/admin') return <Navigate to="/admin" replace />
   return <Outlet />
 }

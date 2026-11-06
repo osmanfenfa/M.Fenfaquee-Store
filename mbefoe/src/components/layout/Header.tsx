@@ -1,6 +1,7 @@
 import { useLocation } from 'react-router'
 import Logo from '@/components/ui/Logo'
 import { useAuth } from '@/hooks/useAuth'
+import { ROLE_LABELS } from '@/types/auth'
 import { ALL_NAV_ITEMS } from './navItems'
 
 const todayLabel = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
@@ -32,11 +33,11 @@ export default function Header() {
           <Logo size={38} />
           <div className="min-w-0 flex-1 leading-tight">
             <p className="truncate text-[15px] font-bold text-ink-950">Bu'kuma</p>
-            <p className="truncate text-[11px] font-medium text-ink-900/75">{current?.label ?? 'M.Fenfaquee Ent'}</p>
+            <p className="truncate text-[11px] font-medium text-ink-900/75">{user?.shop?.name ?? current?.label ?? 'Platform admin'}</p>
           </div>
           <div className="min-w-0 text-right leading-tight">
             <p className="max-w-36 truncate text-[13px] font-semibold text-ink-950">{user?.full_name}</p>
-            <p className="text-[11px] font-medium text-ink-900/75">Owner</p>
+            <p className="text-[11px] font-medium text-ink-900/75">{user ? ROLE_LABELS[user.role] : ''}</p>
           </div>
           <div className="grid size-10 shrink-0 place-items-center rounded-full bg-ink-900 text-xs font-bold text-brand-300 ring-2 ring-white/70">
             {initials(user?.full_name)}

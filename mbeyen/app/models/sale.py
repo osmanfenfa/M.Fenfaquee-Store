@@ -2,10 +2,11 @@ from datetime import date
 from decimal import Decimal
 from enum import StrEnum
 
-from sqlalchemy import CheckConstraint, Date, ForeignKey, String, Text
+from sqlalchemy import CheckConstraint, Date, ForeignKey, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base, Money, TimestampMixin, str_enum
+from app.database.tenancy import TenantMixin
 from app.models.payment import PaymentStatus
 
 
@@ -14,18 +15,19 @@ class SaleStatus(StrEnum):
     VOIDED = "voided"  # cancelled: stock is returned and the sale is excluded from reports
 
 
-class Sale(TimestampMixin, Base):
+class Sale(TenantMixin, TimestampMixin, Base):
     """A manually recorded sale (not a POS). Customer name is optional free text."""
 
     __tablename__ = "sales"
     __table_args__ = (
+        UniqueConstraint("shop_id", "reference", name="uq_sales_shop_reference"),
         CheckConstraint("discount >= 0", name="discount_non_negative"),
         CheckConstraint("total >= 0", name="total_non_negative"),
         CheckConstraint("amount_paid >= 0", name="amount_paid_non_negative"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    reference: Mapped[str] = mapped_column(String(30), unique=True)  # e.g. SAL-20261105-0001
+    reference: Mapped[str] = mapped_column(String(30))  # e.g. SAL-20261105-0001
     sale_date: Mapped[date] = mapped_column(Date, index=True)
     customer_name: Mapped[str | None] = mapped_column(String(150))
 

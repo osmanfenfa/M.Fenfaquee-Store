@@ -1,7 +1,7 @@
 {
-  "name": "Bu'kuma · M.Fenfaquee Enterprise",
+  "name": "Bu'kuma · Shop management",
   "short_name": "Bu'kuma",
-  "description": "Shop management for M.Fenfaquee Enterprise — sales, stock, purchases, expenses and reports.",
+  "description": "Shop management — sales, stock, purchases, expenses and reports.",
   "id": "/",
   "start_url": "/",
   "scope": "/",

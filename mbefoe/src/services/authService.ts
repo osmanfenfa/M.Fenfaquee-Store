@@ -1,4 +1,4 @@
-import type { LoginCredentials, TokenResponse, User } from '@/types/auth'
+import type { AdminShop, LoginCredentials, SignupData, TokenResponse, User } from '@/types/auth'
 import { api, request } from './api'
 
 export const authService = {
@@ -7,7 +7,14 @@ export const authService = {
     const form = new URLSearchParams({ username, password })
     return request<TokenResponse>('/auth/login', { method: 'POST', form })
   },
+  /** Create a new shop + owner account; returns a token (already logged in). */
+  signup: (data: SignupData) => api.post<TokenResponse>('/auth/signup', data),
   me: () => api.get<User>('/auth/me'),
   changePassword: (current_password: string, new_password: string) =>
     api.post<void>('/auth/change-password', { current_password, new_password }),
+}
+
+export const adminService = {
+  shops: () => api.get<AdminShop[]>('/admin/shops'),
+  setShopActive: (id: number, is_active: boolean) => api.patch<AdminShop>(`/admin/shops/${id}`, { is_active }),
 }

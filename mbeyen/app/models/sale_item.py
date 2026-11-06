@@ -4,9 +4,10 @@ from sqlalchemy import CheckConstraint, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base, Money, Quantity
+from app.database.tenancy import TenantMixin
 
 
-class SaleItem(Base):
+class SaleItem(TenantMixin, Base):
     """
     A line on a sale. unit_price and unit_cost are snapshots taken at the time
     of sale, so later price changes never alter past revenue or profit.

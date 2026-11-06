@@ -3,25 +3,28 @@ import { LogOut } from 'lucide-react'
 import Logo from '@/components/ui/Logo'
 import { useAuth } from '@/hooks/useAuth'
 import { cn } from '@/lib/utils'
-import { NAV_GROUPS } from './navItems'
+import { ROLE_LABELS } from '@/types/auth'
+import { navGroupsFor } from './navItems'
 
 /** Brand mark: round leopard logo + names. */
 export function BrandMark({ className }: { className?: string }) {
+  const { user } = useAuth()
   return (
     <div className={cn('flex items-center gap-3', className)}>
       <Logo size={44} className="ring-brand-500/60" />
       <div className="leading-tight">
         <p className="text-sm font-semibold text-white">Bu'kuma</p>
-        <p className="text-[11px] tracking-wide text-brand-300/80">M.Fenfaquee Enterprise</p>
+        <p className="max-w-40 truncate text-[11px] tracking-wide text-brand-300/80">{user?.shop?.name ?? 'Platform admin'}</p>
       </div>
     </div>
   )
 }
 
 export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
+  const { user } = useAuth()
   return (
     <nav className="flex flex-col gap-6" aria-label="Main">
-      {NAV_GROUPS.map((group, i) => (
+      {navGroupsFor(user).map((group, i) => (
         <div key={group.label ?? i}>
           {group.label && (
             <p className="mb-2 px-3 text-[11px] font-medium tracking-wider text-ink-400 uppercase">
@@ -79,7 +82,7 @@ export function SidebarFooter() {
       </div>
       <div className="min-w-0 flex-1 leading-tight">
         <p className="truncate text-sm font-medium text-white">{user?.full_name}</p>
-        <p className="truncate text-xs text-ink-400">Owner</p>
+        <p className="truncate text-xs text-ink-400">{user?.is_superadmin && !user.shop ? 'Platform admin' : user ? ROLE_LABELS[user.role] : ''}</p>
       </div>
       <button
         type="button"

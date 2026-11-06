@@ -5,6 +5,7 @@ from sqlalchemy import CheckConstraint, Date, DateTime, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base, Money, str_enum
+from app.database.tenancy import TenantMixin
 
 
 class PaymentMethod(StrEnum):
@@ -20,7 +21,7 @@ class PaymentStatus(StrEnum):
     PAID = "paid"
 
 
-class Payment(Base):
+class Payment(TenantMixin, Base):
     """
     A single payment received for a sale, or paid to a supplier for a purchase.
     Exactly one of sale_id / purchase_id is set. The parent record's

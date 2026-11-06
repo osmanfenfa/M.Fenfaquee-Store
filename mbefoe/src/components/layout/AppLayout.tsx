@@ -1,11 +1,13 @@
 import { useCallback, useState } from 'react'
 import { Outlet } from 'react-router'
+import { useAuth } from '@/hooks/useAuth'
 import BottomNav from './BottomNav'
 import Header from './Header'
 import MobileNavigation from './MobileNavigation'
 import Sidebar from './Sidebar'
 
 export default function AppLayout() {
+  const { user } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
   const closeMenu = useCallback(() => setMenuOpen(false), [])
 
@@ -19,7 +21,7 @@ export default function AppLayout() {
           <Outlet />
         </main>
       </div>
-      <BottomNav onMore={() => setMenuOpen(true)} />
+      {user?.shop && <BottomNav onMore={() => setMenuOpen(true)} />}
     </div>
   )
 }

@@ -4,10 +4,11 @@ from sqlalchemy import CheckConstraint, Date, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base, Money, TimestampMixin, str_enum
+from app.database.tenancy import TenantMixin
 from app.models.payment import PaymentMethod
 
 
-class Expense(TimestampMixin, Base):
+class Expense(TenantMixin, TimestampMixin, Base):
     """Operating costs that are not stock purchases (rent, power, transport...)."""
 
     __tablename__ = "expenses"

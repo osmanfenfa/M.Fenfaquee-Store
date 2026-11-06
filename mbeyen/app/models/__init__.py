@@ -10,7 +10,7 @@ from app.models.purchase import Purchase, PurchaseStatus
 from app.models.purchase_item import PurchaseItem
 from app.models.sale import Sale, SaleStatus
 from app.models.sale_item import SaleItem
-from app.models.shop_settings import ShopSettings
+from app.models.shop import Shop
 from app.models.stock_movement import MovementType, StockMovement
 from app.models.supplier import Supplier
 from app.models.user import User
@@ -31,8 +31,15 @@ __all__ = [
     "Sale",
     "SaleItem",
     "SaleStatus",
-    "ShopSettings",
+    "Shop",
     "StockMovement",
     "Supplier",
     "User",
 ]
+
+# Isolation safety net: loading another shop's row raises (see app.database.tenancy)
+from app.database.tenancy import TenantMixin, register_load_guard  # noqa: E402
+
+for _model in (Category, Expense, ExpenseCategory, Payment, Product, Purchase, PurchaseItem, Sale, SaleItem, StockMovement, Supplier, AuditLog):
+    assert issubclass(_model, TenantMixin)
+    register_load_guard(_model)

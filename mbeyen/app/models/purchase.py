@@ -2,10 +2,11 @@ from datetime import date, datetime
 from decimal import Decimal
 from enum import StrEnum
 
-from sqlalchemy import CheckConstraint, Date, DateTime, ForeignKey, String, Text
+from sqlalchemy import CheckConstraint, Date, DateTime, ForeignKey, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base, Money, TimestampMixin, str_enum
+from app.database.tenancy import TenantMixin
 from app.models.payment import PaymentStatus
 
 
@@ -15,17 +16,18 @@ class PurchaseStatus(StrEnum):
     CANCELLED = "cancelled"
 
 
-class Purchase(TimestampMixin, Base):
+class Purchase(TenantMixin, TimestampMixin, Base):
     """Stock bought from a supplier. Stock only increases when the purchase is received."""
 
     __tablename__ = "purchases"
     __table_args__ = (
+        UniqueConstraint("shop_id", "reference", name="uq_purchases_shop_reference"),
         CheckConstraint("total >= 0", name="total_non_negative"),
         CheckConstraint("amount_paid >= 0", name="amount_paid_non_negative"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    reference: Mapped[str] = mapped_column(String(30), unique=True)  # e.g. PUR-20261105-0001
+    reference: Mapped[str] = mapped_column(String(30))  # e.g. PUR-20261105-0001
     supplier_id: Mapped[int | None] = mapped_column(
         ForeignKey("suppliers.id", ondelete="RESTRICT"), index=True
     )
