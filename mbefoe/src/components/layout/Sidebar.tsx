@@ -76,23 +76,21 @@ export function SidebarFooter() {
     .toUpperCase()
 
   return (
-    <div className="flex items-center gap-3 border-t border-white/10 pt-4">
+    <div className="flex items-start gap-3 border-t border-white/10 pt-4">
       <div className="grid size-9 shrink-0 place-items-center rounded-full bg-ink-700 text-xs font-semibold text-brand-200">
         {initials}
       </div>
       <div className="min-w-0 flex-1 leading-tight">
         <p className="truncate text-sm font-medium text-white">{user?.full_name}</p>
         <p className="truncate text-xs text-ink-400">{user?.is_superadmin && !user.shop ? 'Platform admin' : user ? ROLE_LABELS[user.role] : ''}</p>
+        <button
+          type="button"
+          onClick={logout}
+          className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-white/15 px-2.5 py-1 text-xs font-medium text-ink-200 transition hover:border-brand-400/60 hover:bg-white/5 hover:text-white"
+        >
+          <LogOut className="size-3.5" aria-hidden /> Log out
+        </button>
       </div>
-      <button
-        type="button"
-        onClick={logout}
-        className="rounded-lg p-2 text-ink-400 transition hover:bg-white/5 hover:text-white"
-        aria-label="Sign out"
-        title="Sign out"
-      >
-        <LogOut className="size-4" />
-      </button>
     </div>
   )
 }
